@@ -2,10 +2,11 @@
 function displayPosts(posts) {
     const postListUl = document.getElementById("post-list");
     
-    // Clear any existing content just in case
-    postListUl.innerHTML = "";
+    // Safety check in case the element isn't found in a headless test environment
+    if (!postListUl) return;
 
-    // Loop through the posts list
+    postListUl.innerHTML = ""; // Clear existing list
+
     posts.forEach(post => {
         // Create an li tag
         const li = document.createElement("li");
@@ -32,20 +33,29 @@ async function fetchPosts() {
     try {
         const response = await fetch("https://jsonplaceholder.typicode.com/posts");
         
-        // Check if response is successful
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
 
         const posts = await response.json();
-        
-        // Call displayPosts() function after fetch
         displayPosts(posts);
-        
+        return posts; // Helpful for tests that await the fetch function
     } catch (error) {
         console.error("Error fetching posts:", error);
     }
 }
 
-// Run the fetch function when the script loads
-fetchPosts();
+// Only call fetchPosts automatically if we are running in a browser environment (not in Jest test runner)
+if (typeof window !== 'undefined' && typeof process === 'undefined') {
+    fetchPosts();
+}
+
+// Export for tests
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = { displayPosts, fetchPosts };
+}
+
+// Export functions for Jest testing (if environment supports module.exports)
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = { displayPosts, fetchPosts };
+}
