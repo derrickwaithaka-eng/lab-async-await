@@ -1,0 +1,54 @@
+/* General page styling */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f6f8;
+    margin: 0;
+    padding: 20px;
+    color: #333;
+}
+
+/* Main page title */
+h1 {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 30px;
+}
+
+/* Container for the posts */
+#post-list {
+    list-style-type: none;
+    padding: 0;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Individual post card */
+#post-list li {
+    background: #ffffff;
+    padding: 20px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Subtle hover effect for interactivity */
+#post-list li:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Post title styling */
+#post-list li h1 {
+    font-size: 1.2rem;
+    margin: 0 0 10px 0;
+    color: #1a73e8;
+    text-align: left; /* Overrides the center alignment of the main h1 */
+}
+
+/* Post body text styling */
+#post-list li p {
+    margin: 0;
+    line-height: 1.5;
+    color: #555;
+}

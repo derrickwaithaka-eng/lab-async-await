@@ -1,61 +1,66 @@
-// Function to display posts in the DOM
-function displayPosts(posts) {
-    const postListUl = document.getElementById("post-list");
-    
-    // Safety check in case the element isn't found in a headless test environment
-    if (!postListUl) return;
-
-    postListUl.innerHTML = ""; // Clear existing list
-
-    posts.forEach(post => {
-        // Create an li tag
-        const li = document.createElement("li");
-
-        // Create a new h1 tag and add the title as textContent
-        const h1 = document.createElement("h1");
-        h1.textContent = post.title;
-
-        // Create a new p tag and add the body as textContent
-        const p = document.createElement("p");
-        p.textContent = post.body;
-
-        // Append h1 and p to li
-        li.appendChild(h1);
-        li.appendChild(p);
-
-        // Append li to the ul (#post-list)
-        postListUl.appendChild(li);
-    });
-}
-
-// Function to house fetch and apply async/await
+/**
+ * Fetches posts from the JSONPlaceholder API using async/await,
+ * handles potential errors, and triggers the display function.
+ */
 async function fetchPosts() {
+    const apiUrl = 'https://jsonplaceholder.typicode.com/posts';
+    
     try {
-        const response = await fetch("https://jsonplaceholder.typicode.com/posts");
+        const response = await fetch(apiUrl);
         
+        // Check if the network response was successful
         if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+            throw new Error(`HTTP error! Status: ${response.status}`);
         }
-
+        
         const posts = await response.json();
+        
+        // Call the display function with the retrieved array of posts
         displayPosts(posts);
-        return posts; // Helpful for tests that await the fetch function
+        
     } catch (error) {
-        console.error("Error fetching posts:", error);
+        console.error('Failed to fetch posts:', error);
+        
+        // Optionally display a user-friendly error message in the DOM
+        const postList = document.getElementById('post-list');
+        if (postList) {
+            postList.innerHTML = `<li>Error loading posts. Please try again later.</li>`;
+        }
     }
 }
 
-// Only call fetchPosts automatically if we are running in a browser environment (not in Jest test runner)
-if (typeof window !== 'undefined' && typeof process === 'undefined') {
-    fetchPosts();
+/**
+ * Iterates through an array of posts and dynamically creates 
+ * DOM elements to display each post inside the #post-list element.
+ * 
+ * @param {Array} posts - Array of post objects from the API
+ */
+function displayPosts(posts) {
+    const postList = document.getElementById('post-list');
+    
+    // Clear out any existing content safely
+    postList.innerHTML = '';
+    
+    posts.forEach(post => {
+        // 1. Create a new <li> element
+        const li = document.createElement('li');
+        
+        // 2. Create a new <h1> element for the title
+        const h1 = document.createElement('h1');
+        h1.textContent = post.title;
+        
+        // 3. Create a new <p> element for the body
+        const p = document.createElement('p');
+        p.textContent = post.body;
+        
+        // 4. Append h1 and p to the li tag
+        li.appendChild(h1);
+        li.appendChild(p);
+        
+        // 5. Append the completed li to the ul (#post-list)
+        postList.appendChild(li);
+    });
 }
 
-// Export for tests
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { displayPosts, fetchPosts };
-}
-
-// Export functions for Jest testing (if environment supports module.exports)
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { displayPosts, fetchPosts };
-}
+// Execute the fetch function when the script loads
+fetchPosts();
